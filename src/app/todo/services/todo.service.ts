@@ -8,7 +8,7 @@ import { ITask } from '../interfaces/task.interface';
 })
 export class TodoService {
   public todoList$: BehaviorSubject<ITask[]> = new BehaviorSubject([]);
-  public isShowRemovedItemLoader$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public isShowTodoListLoader$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public spinner$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor() { }
@@ -39,18 +39,23 @@ export class TodoService {
       tap(() => {
         todoList.splice(removedTaskIndex, 1);
         this.todoList$.next(todoList);
-        this.isShowRemovedItemLoader$.next(false);
+        this.isShowTodoListLoader$.next(false);
       })
     )
   }
 
-  public changeTodoItemStatus(todoItem: ITask): void {
+  public changeTodoItemStatus(todoItem: ITask): Observable<ITask> {
     const todoList: ITask[] = this.todoList$.getValue();
-    todoList.forEach((item: ITask) => {
-      if (item.id === todoItem.id) {
-        return item.completed = !item.completed;
-      }
-    });
-    this.todoList$.next(todoList);
+    return this.serverResponseEmulation(todoItem, 1,2).pipe(
+      tap(() => {
+        todoList.forEach((item: ITask) => {
+          if (item.id === todoItem.id) {
+            return item.completed = !item.completed;
+          }
+        });
+        this.todoList$.next(todoList);
+        this.isShowTodoListLoader$.next(false);
+      })
+    );
   }
 }

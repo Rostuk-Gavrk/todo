@@ -1,43 +1,45 @@
-<div class="todo-list-wrap">
-  <div *ngIf="todoList.length; else empty_table">
-    <mat-list role="list" class="list" *ngIf="todoList.length">
-      <div class="column">
-        <div>Id:</div>
-        <div>Title:</div>
-      </div>
-      <mat-list-item role="listitem" *ngFor="let item of todoList">
-        <div class="item-content">
-          <div>{{item.id}}</div>
-          <div>{{item.title}}</div>
-          <div class="delete" (click)="deleteItem(item.id)">
-            <mat-icon>delete</mat-icon>
-          </div>
-          <div class="checkbox">
-            <div *ngIf="item.completed; else not_complete">
-              <mat-checkbox [checked]="item.completed" (change)="checkboxChange(item)" class="example-margin complete">Task completed</mat-checkbox>
-            </div>
-            <ng-template #not_complete>
-              <mat-checkbox [checked]="item.completed" (change)="checkboxChange(item)" class="example-margin not-complete">Task is not completed</mat-checkbox>
-            </ng-template>
-          </div>
+<div [class.overlay]="isShowSpinner">
+  <div class="todo-list-wrap">
+    <div *ngIf="todoList.length; else empty_table">
+      <mat-list role="list" class="list" *ngIf="todoList.length">
+        <div class="column">
+          <div>Id:</div>
+          <div>Title:</div>
         </div>
-      </mat-list-item>
-    </mat-list>
-  </div>
-
-  <ng-template #empty_table>
-    <div class="empty-table-wrap">
-      There are no any items in ToDo list. Please create new one.
+        <mat-list-item role="listitem" *ngFor="let item of todoList">
+          <div class="item-content">
+            <div>{{item.id}}</div>
+            <div>{{item.title}}</div>
+            <div class="delete" (click)="deleteItem(item.id)">
+              <mat-icon>delete</mat-icon>
+            </div>
+            <div class="checkbox">
+              <div *ngIf="item.completed; else not_complete">
+                <mat-checkbox [checked]="item.completed" (change)="checkboxChange(item)" class="example-margin complete">Task completed</mat-checkbox>
+              </div>
+              <ng-template #not_complete>
+                <mat-checkbox [checked]="item.completed" (change)="checkboxChange(item)" class="example-margin not-complete">Task is not completed</mat-checkbox>
+              </ng-template>
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
     </div>
-  </ng-template>
 
-  <div class="create-task-btn">
-    <button mat-raised-button color="primary" (click)="moveToCreateTaskPage()">Create Task</button>
-  </div>
+    <ng-template #empty_table>
+      <div class="empty-table-wrap">
+        There are no any items in ToDo list. Please create new one.
+      </div>
+    </ng-template>
 
-  <div class="spinner" *ngIf="isShowSpinner">
-    <mat-spinner
-      [diameter]="50"
-    ></mat-spinner>
+    <div class="create-task-btn">
+      <button mat-raised-button color="primary" (click)="moveToCreateTaskPage()">Create Task</button>
+    </div>
+
+    <div class="spinner" *ngIf="isShowSpinner">
+      <mat-spinner
+        [diameter]="50"
+      ></mat-spinner>
+    </div>
   </div>
 </div>

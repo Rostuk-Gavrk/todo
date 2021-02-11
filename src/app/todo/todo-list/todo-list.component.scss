@@ -1,3 +1,18 @@
+.overlay {
+  &:before {
+    transition: 0.4s ease-in-out;
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    z-index: 10000000000;
+    background: black;
+    opacity: 0.6;
+  }
+}
 .todo-list-wrap {
   position: relative;
   width: 90%;

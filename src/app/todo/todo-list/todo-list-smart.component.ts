@@ -29,7 +29,7 @@ export class TodoListSmartComponent implements OnInit{
 
   public ngOnInit() {
     this.todoList$ = this.todoService.todoList$;
-    this.isShowSpinner$ = this.todoService.isShowRemovedItemLoader$;
+    this.isShowSpinner$ = this.todoService.isShowTodoListLoader$;
   }
 
   public moveToCreateTaskPage(): void {
@@ -37,7 +37,7 @@ export class TodoListSmartComponent implements OnInit{
   }
 
   public deleteTodoItem(todoId: number): void {
-    this.todoService.isShowRemovedItemLoader$.next(true);
+    this.todoService.isShowTodoListLoader$.next(true);
     this.todoService.removeTodoItem(todoId).subscribe((task: ITask) => {
       this.snackBar.open(`Task item ${task.title} has been removed`, 'success', {
         duration: 2000,
@@ -46,6 +46,7 @@ export class TodoListSmartComponent implements OnInit{
   }
 
   public checkboxChange(todoItem: ITask): void {
-    this.todoService.changeTodoItemStatus(todoItem);
+    this.todoService.isShowTodoListLoader$.next(true);
+    this.todoService.changeTodoItemStatus(todoItem).subscribe();
   }
 }
