@@ -36,7 +36,7 @@ export class CreateTaskSmartComponent implements OnInit{
 
   public addTask(newTask: ITask): void {
     this.todoService.spinner$.next(true);
-    this.todoService.addTodo(newTask).subscribe();
+    this.todoService.addTodo(newTask);
   }
 
   public moveToHomePage(): void {

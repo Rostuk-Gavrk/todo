@@ -6,7 +6,7 @@
           <div>Id:</div>
           <div>Title:</div>
         </div>
-        <mat-list-item role="listitem" *ngFor="let item of todoList">
+        <mat-list-item role="listitem" *ngFor="let item of todoList.reverse()">
           <div class="item-content">
             <div>{{item.id}}</div>
             <div>{{item.title}}</div>

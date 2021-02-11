@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import { concatMap, delay, tap } from 'rxjs/operators';
 import { ITask } from '../interfaces/task.interface';
 import { LocalStorageService } from './local-storage.service';
@@ -9,10 +9,13 @@ import { LocalStorageService } from './local-storage.service';
 })
 export class TodoService {
   public todoList$: BehaviorSubject<ITask[]> = new BehaviorSubject([]);
+  public taskToDo$: Subject<ITask> = new Subject();
   public isShowTodoListLoader$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public spinner$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor(private localStorageService: LocalStorageService) { }
+  constructor(private localStorageService: LocalStorageService) {
+    this.postTaskToDo();
+  }
 
   public serverResponseEmulation(newTask: ITask, min: number, max: number): Observable<ITask> {
     const delayTime: number = (Math.random() * (max - min) + min) * 1000;
@@ -21,17 +24,8 @@ export class TodoService {
     )
   }
 
-  public addTodo(newTask: ITask): Observable<ITask> {
-    return of(newTask).pipe(
-      concatMap(() => this.serverResponseEmulation(newTask, 10, 5)),
-      tap((newTask: ITask) => {
-        const todoList: ITask[] = this.todoList$.getValue();
-        todoList.push(newTask);
-        this.localStorageService.setStorageItem('todoListItems', todoList);
-        this.todoList$.next(todoList);
-        this.spinner$.next(false);
-      })
-    );
+  public addTodo(newTask: ITask): void {
+    this.taskToDo$.next(newTask);
   }
 
   public removeTodoItem(todoId: number): Observable<ITask> {
@@ -61,5 +55,17 @@ export class TodoService {
         this.isShowTodoListLoader$.next(false);
       })
     );
+  }
+
+  public postTaskToDo(): void {
+    this.taskToDo$.pipe(
+      concatMap((newTask: ITask) => this.serverResponseEmulation(newTask, 5, 10)),
+    ).subscribe((newTask: ITask) => {
+      const todoList: ITask[] = this.todoList$.getValue();
+      todoList.push(newTask);
+      this.localStorageService.setStorageItem('todoListItems', todoList);
+      this.todoList$.next(todoList);
+      this.spinner$.next(false);
+    });
   }
 }
