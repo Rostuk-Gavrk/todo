@@ -1,0 +1,22 @@
+.create-task {
+  position: relative;
+  min-height: 100vh;
+  height: 100%;
+  .home-btn {
+    margin-bottom: 50px;
+  }
+  form {
+    width: 90%;
+    margin: 0 auto;
+    button,
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  .spinner {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+}

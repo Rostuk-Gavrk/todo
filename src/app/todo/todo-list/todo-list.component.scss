@@ -1,0 +1,40 @@
+.todo-list-wrap {
+  width: 90%;
+  margin: 0 auto;
+  .empty-table-wrap {
+    margin-top: 25px;
+  }
+  .list {
+    margin-top: 50px;
+    box-shadow: 0 5px 5px -3px rgb(0 0 0 / 20%), 0 8px 10px 1px rgb(0 0 0 / 14%), 0 3px 14px 2px rgb(0 0 0 / 12%);
+    mat-list-item {
+      border-bottom: 1px solid rgba(0,0,0,.2);
+    }
+    .column {
+      display: flex;
+      padding: 15px 16px;
+      border-bottom: 1px solid red;
+      div {
+        width: 30%;
+      }
+    }
+    .item-content {
+      width: 100%;
+      display: flex;
+      div {
+        width: 30%;
+      }
+      .delete {
+        transition: 0.3s ease-in-out;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+  button {
+    width: 100%;
+    margin-top: 50px;
+  }
+}

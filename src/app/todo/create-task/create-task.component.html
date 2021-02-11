@@ -1,0 +1,25 @@
+<div class="create-task">
+  <div class="home-btn">
+    <button mat-icon-button color="primary" (click)="moveToHomePage()">
+      Todo List
+      <mat-icon>home</mat-icon>
+    </button>
+  </div>
+
+  <form class="form" [formGroup]="formGroup">
+    <mat-error *ngIf="formGroup.controls['taskTitle'].errors && this.formGroup.controls['taskTitle'].touched">
+      Please enter value
+    </mat-error>
+    <mat-form-field class="example-full-width">
+      <mat-label>Create Task</mat-label>
+      <input matInput placeholder="Create Task" formControlName="taskTitle">
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="addTask()" [disabled]="formGroup.controls['taskTitle'].errors">Add Task</button>
+  </form>
+
+  <div class="spinner" *ngIf="isShowSpinner">
+    <mat-spinner
+      [diameter]="50"
+    ></mat-spinner>
+  </div>
+</div>
