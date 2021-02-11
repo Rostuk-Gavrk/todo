@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { concatMap, delay, tap } from 'rxjs/operators';
 import { ITask } from '../interfaces/task.interface';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class TodoService {
   public isShowTodoListLoader$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public spinner$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor() { }
+  constructor(private localStorageService: LocalStorageService) { }
 
   public serverResponseEmulation(newTask: ITask, min: number, max: number): Observable<ITask> {
     const delayTime: number = (Math.random() * (max - min) + min) * 1000;
@@ -26,6 +27,7 @@ export class TodoService {
       tap((newTask: ITask) => {
         const todoList: ITask[] = this.todoList$.getValue();
         todoList.push(newTask);
+        this.localStorageService.setStorageItem('todoListItems', todoList);
         this.todoList$.next(todoList);
         this.spinner$.next(false);
       })
@@ -38,6 +40,7 @@ export class TodoService {
     return this.serverResponseEmulation(todoList[removedTaskIndex], 1,2).pipe(
       tap(() => {
         todoList.splice(removedTaskIndex, 1);
+        this.localStorageService.setStorageItem('todoListItems', todoList);
         this.todoList$.next(todoList);
         this.isShowTodoListLoader$.next(false);
       })
@@ -53,6 +56,7 @@ export class TodoService {
             return item.completed = !item.completed;
           }
         });
+        this.localStorageService.setStorageItem('todoListItems', todoList);
         this.todoList$.next(todoList);
         this.isShowTodoListLoader$.next(false);
       })

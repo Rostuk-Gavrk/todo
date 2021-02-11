@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import {ITask} from '../interfaces/task.interface';
+import {LocalStorageService} from '../services/local-storage.service';
 import {TodoService} from '../services/todo.service';
 
 @Component({
@@ -24,10 +25,15 @@ export class TodoListSmartComponent implements OnInit{
   constructor(
     private todoService: TodoService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private localStorageService: LocalStorageService
   ) { }
 
   public ngOnInit() {
+    const storageItems: ITask[] = this.localStorageService.getStorageItem('todoListItems');
+    if (Array.isArray(storageItems) && Boolean(storageItems.length)) {
+      this.todoService.todoList$.next(storageItems);
+    }
     this.todoList$ = this.todoService.todoList$;
     this.isShowSpinner$ = this.todoService.isShowTodoListLoader$;
   }
