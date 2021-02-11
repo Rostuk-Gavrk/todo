@@ -24,8 +24,9 @@ export class CreateTaskComponent {
       const taskId: number = Math.floor((Math.random() * (10000 - 1) + 5));
       const newTask: ITask = {
         title: inputValue,
-        id: taskId
-      }
+        id: taskId,
+        completed: false
+      };
       this.addTaskEmit.emit(newTask);
       this.clearForm();
     }

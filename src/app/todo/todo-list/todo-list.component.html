@@ -12,6 +12,14 @@
           <div class="delete" (click)="deleteItem(item.id)">
             <mat-icon>delete</mat-icon>
           </div>
+          <div class="checkbox">
+            <div *ngIf="item.completed; else not_complete">
+              <mat-checkbox [checked]="item.completed" (change)="checkboxChange(item)" class="example-margin complete">Task completed</mat-checkbox>
+            </div>
+            <ng-template #not_complete>
+              <mat-checkbox [checked]="item.completed" (change)="checkboxChange(item)" class="example-margin not-complete">Task is not completed</mat-checkbox>
+            </ng-template>
+          </div>
         </div>
       </mat-list-item>
     </mat-list>
@@ -25,5 +33,11 @@
 
   <div class="create-task-btn">
     <button mat-raised-button color="primary" (click)="moveToCreateTaskPage()">Create Task</button>
+  </div>
+
+  <div class="spinner" *ngIf="isShowSpinner">
+    <mat-spinner
+      [diameter]="50"
+    ></mat-spinner>
   </div>
 </div>

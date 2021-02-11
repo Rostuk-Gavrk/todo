@@ -9,7 +9,9 @@ import { ITask } from '../interfaces/task.interface';
 export class TodoListComponent implements OnInit  {
   @Output() moveToCreateTaskPageEmit = new EventEmitter<void>();
   @Output() deleteTodoItemEmit = new EventEmitter<number>();
+  @Output() checkboxChangeEmit = new EventEmitter<ITask>();
   @Input() todoList: ITask[];
+  @Input() isShowSpinner: boolean;
 
   constructor() { }
 
@@ -22,6 +24,10 @@ export class TodoListComponent implements OnInit  {
 
   public deleteItem(todoId: number): void {
     this.deleteTodoItemEmit.emit(todoId);
+  }
+
+  public checkboxChange(todoItem: ITask): void {
+    this.checkboxChangeEmit.emit(todoItem);
   }
 }
 

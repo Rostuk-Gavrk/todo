@@ -8,13 +8,13 @@ import { ITask } from '../interfaces/task.interface';
 })
 export class TodoService {
   public todoList$: BehaviorSubject<ITask[]> = new BehaviorSubject([]);
+  public isShowRemovedItemLoader$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   public spinner$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
 
   constructor() { }
 
-  public saveTodo(newTask: ITask): Observable<ITask> {
-    const delayTime: number = (Math.random() * (10 - 5) + 5) * 1000;
+  public serverResponseEmulation(newTask: ITask, min: number, max: number): Observable<ITask> {
+    const delayTime: number = (Math.random() * (max - min) + min) * 1000;
     return of(newTask).pipe(
       delay(delayTime)
     )
@@ -22,7 +22,7 @@ export class TodoService {
 
   public addTodo(newTask: ITask): Observable<ITask> {
     return of(newTask).pipe(
-      concatMap(() => this.saveTodo(newTask)),
+      concatMap(() => this.serverResponseEmulation(newTask, 10, 5)),
       tap((newTask: ITask) => {
         const todoList: ITask[] = this.todoList$.getValue();
         todoList.push(newTask);
@@ -32,10 +32,25 @@ export class TodoService {
     );
   }
 
-  public removeTodoItem(todoId: number): void {
+  public removeTodoItem(todoId: number): Observable<ITask> {
     const todoList: ITask[] = this.todoList$.getValue();
     const removedTaskIndex: number = todoList.findIndex((item: ITask) => item.id === todoId);
-    todoList.splice(removedTaskIndex, 1);
+    return this.serverResponseEmulation(todoList[removedTaskIndex], 1,2).pipe(
+      tap(() => {
+        todoList.splice(removedTaskIndex, 1);
+        this.todoList$.next(todoList);
+        this.isShowRemovedItemLoader$.next(false);
+      })
+    )
+  }
+
+  public changeTodoItemStatus(todoItem: ITask): void {
+    const todoList: ITask[] = this.todoList$.getValue();
+    todoList.forEach((item: ITask) => {
+      if (item.id === todoItem.id) {
+        return item.completed = !item.completed;
+      }
+    });
     this.todoList$.next(todoList);
   }
 }
